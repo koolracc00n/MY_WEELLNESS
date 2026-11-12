@@ -1,0 +1,20 @@
+# Build and Python environment output
+target/
+ocr_service/.venv/
+__pycache__/
+ocr_service/__pycache__/
+*.py[cod]
+
+# Local settings, logs, and backups
+.env
+.env.*
+!.env.example
+app.log
+*.log
+*.bak
+*.stale-copy.bak
+
+# Editor and operating system files
+.vscode/
+.DS_Store
+Thumbs.db

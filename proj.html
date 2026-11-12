@@ -1,0 +1,2434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Wellness - Integrated Platform & Working Model</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-app: #f4f7f6;
+      --sidebar-bg: #ffffff;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --primary-green: #059669;
+      --primary-green-dark: #047857;
+      --primary-green-light: #e6f4ea;
+      --accent-blue: #0284c7;
+      --accent-purple: #7c3aed;
+      --border-color: #e2e8f0;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-pill: 100px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-app);
+      color: var(--text-main);
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* SIDEBAR */
+    aside.sidebar {
+      width: 250px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px 16px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      flex-shrink: 0;
+      z-index: 20;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-left: 8px;
+      margin-bottom: 24px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--primary-green-light);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-green);
+    }
+
+    .brand-text h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.1;
+    }
+
+    .brand-text p {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      list-style: none;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.86rem;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-item a:hover {
+      background: #f8fafc;
+      color: var(--primary-green);
+    }
+
+    .nav-item.active a {
+      background: var(--primary-green-light);
+      color: var(--primary-green);
+      font-weight: 700;
+    }
+
+    .nav-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 8px 0;
+    }
+
+    .sidebar-footer-illustration {
+      text-align: center;
+      padding: 14px 12px;
+      background: #f8fafc;
+      border-radius: var(--radius-lg);
+      border: 1px dashed var(--border-color);
+      margin-top: auto;
+    }
+
+    .sidebar-footer-text {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #475569;
+      margin-top: 6px;
+    }
+
+    /* MAIN CONTAINER */
+    .main-wrapper {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      padding-bottom: 220px;
+    }
+
+    header.top-header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #f1f5f9;
+      border: 1px solid transparent;
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      width: 380px;
+      transition: all 0.2s;
+    }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      background: transparent;
+      width: 100%;
+      font-family: inherit;
+      font-size: 0.88rem;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .dev-pill {
+      background: #0f172a;
+      color: #38bdf8;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 100px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #10b981;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: var(--radius-pill);
+      transition: background 0.2s;
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #0d9488;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .user-name {
+      font-weight: 700;
+      font-size: 0.88rem;
+    }
+
+    .dashboard-content {
+      padding: 24px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .view-section {
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .view-section.active {
+      display: flex;
+    }
+
+    .greeting-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(90deg, rgba(230, 244, 234, 0.6) 0%, rgba(224, 242, 254, 0.5) 100%);
+      border: 1px solid rgba(5, 150, 105, 0.2);
+      border-radius: var(--radius-lg);
+      padding: 18px 24px;
+    }
+
+    .greeting-text h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .greeting-text p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    .greeting-banner-quote {
+      font-family: 'Caveat', cursive;
+      font-size: 1.45rem;
+      color: var(--primary-green-dark);
+      font-weight: 600;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-width: 0;
+    }
+
+    .mobile-menu-toggle {
+      display: none;
+      border: 1px solid var(--border-color);
+      background: #ffffff;
+      color: var(--text-main);
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      font-size: 1.15rem;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .mobile-nav-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s ease;
+      z-index: 90;
+    }
+
+    .mobile-nav-backdrop.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .card-header-flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .card-title-flex {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .card-link {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--primary-green);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .top-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+
+    .profile-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+      border: 1px solid #bbf7d0;
+    }
+
+    .profile-main-layout {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .profile-user-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .profile-avatar-big {
+      width: 52px;
+      height: 52px;
+      background: #0d9488;
+      color: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      font-weight: 800;
+    }
+
+    .profile-details h3 {
+      font-size: 1.05rem;
+      font-weight: 800;
+    }
+
+    .profile-details p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      font-weight: 600;
+    }
+
+    .profile-metrics-group {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .metric-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .metric-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .metric-text-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .metric-text-desc {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-green-solid {
+      background: var(--primary-green);
+      color: #ffffff;
+    }
+
+    .btn-green-solid:hover {
+      background: var(--primary-green-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline-green {
+      background: #ffffff;
+      border: 1.5px solid var(--primary-green);
+      color: var(--primary-green);
+    }
+
+    .btn-white-outline {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    .journey-card {
+      background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+      border: 1px solid #fde68a;
+    }
+
+    .journey-card h3 {
+      font-size: 0.98rem;
+      font-weight: 800;
+    }
+
+    .journey-card p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin: 6px 0 14px 0;
+    }
+
+    .middle-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+    }
+
+    .lab-report-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .report-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .doc-icon-box {
+      width: 40px;
+      height: 40px;
+      background: #e0f2fe;
+      color: #0284c7;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .parameters-summary {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.78rem;
+      padding-left: 12px;
+      border-left: 1px solid var(--border-color);
+    }
+
+    .param-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+    }
+
+    .wellness-status-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 10px 0 14px 0;
+    }
+
+    .wellness-status-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .status-pill {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 100px;
+    }
+
+    .pill-good { background: #dcfce7; color: #15803d; }
+    .pill-moderate { background: #fef3c7; color: #b45309; }
+    .pill-attention { background: #fee2e2; color: #b91c1c; }
+
+    .plan-checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .plan-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 12px;
+      background: #f8fafc;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .plan-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .plan-text h5 { font-size: 0.82rem; font-weight: 700; }
+    .plan-text p { font-size: 0.7rem; color: var(--text-muted); }
+
+    .plan-checkbox {
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 50%;
+      margin-left: auto;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .plan-checkbox.checked {
+      background: var(--primary-green);
+      border-color: var(--primary-green);
+      color: #ffffff;
+      font-size: 0.7rem;
+    }
+
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 280px;
+      gap: 20px;
+    }
+
+    .recs-cards-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 10px 0 14px 0;
+    }
+
+    .rec-mini-card {
+      padding: 10px 8px;
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .rec-bg-green { background: #ecfdf5; border: 1px solid #a7f3d0; }
+    .rec-bg-blue { background: #f0f9ff; border: 1px solid #bae6fd; }
+    .rec-bg-purple { background: #faf5ff; border: 1px solid #e9d5ff; }
+    .rec-bg-cyan { background: #ecfeff; border: 1px solid #a5f3fc; }
+
+    .ai-chat-card { background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%); }
+
+    .ai-input-box {
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-pill);
+      padding: 4px 4px 4px 14px;
+      margin: 10px 0 8px 0;
+    }
+
+    .ai-input-box input {
+      border: none;
+      outline: none;
+      background: transparent;
+      width: 100%;
+      font-family: inherit;
+      font-size: 0.82rem;
+    }
+
+    .send-btn {
+      width: 30px;
+      height: 30px;
+      background: var(--primary-green);
+      color: #ffffff;
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .ai-chips-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .ai-chip {
+      font-size: 0.68rem;
+      font-weight: 600;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      padding: 4px 8px;
+      border-radius: var(--radius-pill);
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .guidance-card {
+      background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%);
+      border: 1px solid #a7f3d0;
+      text-align: center;
+      padding: 16px;
+    }
+
+    .guidance-icon-box {
+      width: 42px;
+      height: 42px;
+      background: #d1fae5;
+      color: var(--primary-green);
+      border-radius: 50%;
+      margin: 0 auto 8px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .doc-viewer {
+      background: #0f172a;
+      color: #38bdf8;
+      border-radius: 10px;
+      padding: 14px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      height: 380px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+
+    .upload-field {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .upload-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 104px;
+      width: 100%;
+      border: 1.5px dashed #a7f3d0;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+      color: var(--primary-green-dark);
+      font-weight: 700;
+      text-align: center;
+      padding: 18px;
+      cursor: pointer;
+    }
+
+    .upload-box input {
+      display: none;
+    }
+
+    .collection-list { display: flex; flex-direction: column; gap: 6px; }
+
+    .collection-item {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+
+    .collection-item.active { background: #dcfce7; border-color: #10b981; color: #14532d; }
+
+    .sticky-terminal {
+      position: fixed;
+      bottom: 0;
+      left: 250px;
+      right: 0;
+      background: #090d16;
+      color: #e2e8f0;
+      border-top: 2px solid #1e293b;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.76rem;
+      z-index: 50;
+    }
+
+    .terminal-header {
+      background: #1e293b;
+      padding: 6px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .terminal-body {
+      padding: 10px 16px;
+      height: 140px;
+      overflow-y: auto;
+      line-height: 1.5;
+    }
+
+    .log-line { display: flex; gap: 10px; margin-bottom: 3px; }
+    .log-time { color: #64748b; }
+    .log-info { color: #38bdf8; }
+    .log-success { color: #4ade80; }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      max-width: 600px;
+      width: 100%;
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+
+    @media (max-width: 1200px) {
+      .top-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bottom-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .guidance-card {
+        grid-column: span 2;
+      }
+    }
+
+    @media (max-width: 960px) {
+      .middle-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .search-box {
+        width: min(100%, 300px);
+      }
+
+      .profile-main-layout {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        display: block;
+      }
+
+      body.sidebar-open {
+        overflow: hidden;
+      }
+
+      .mobile-menu-toggle {
+        display: inline-flex;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: min(82vw, 300px);
+        height: 100vh;
+        transform: translateX(-110%);
+        transition: transform 0.25s ease;
+        box-shadow: 18px 0 30px rgba(15, 23, 42, 0.12);
+        z-index: 110;
+      }
+
+      body.sidebar-open .sidebar {
+        transform: translateX(0);
+      }
+
+      .main-wrapper {
+        padding-bottom: 150px;
+      }
+
+      .top-header {
+        padding: 12px 16px;
+        gap: 10px;
+      }
+
+      .search-box {
+        width: 100%;
+      }
+
+      .header-actions {
+        gap: 8px;
+      }
+
+      .header-actions .dev-pill {
+        display: none;
+      }
+
+      .dashboard-content {
+        padding: 18px 16px 24px;
+      }
+
+      .greeting-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .greeting-text h2 {
+        font-size: 1.2rem;
+      }
+
+      .top-grid,
+      .middle-grid,
+      .bottom-grid {
+        grid-template-columns: 1fr;
+      }
+
+      #view-progress .middle-grid > article[style*="span 2"] {
+        grid-column: auto !important;
+      }
+
+      .guidance-card {
+        grid-column: auto;
+      }
+
+      .recs-cards-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .card,
+      .profile-card,
+      .journey-card,
+      .ai-chat-card,
+      .guidance-card {
+        padding: 16px;
+      }
+
+      .btn,
+      .ai-input-box input,
+      select,
+      textarea,
+      input[type="text"],
+      input[type="number"],
+      input[type="email"],
+      input[type="password"] {
+        min-height: 44px;
+      }
+
+      .ai-input-box {
+        align-items: center;
+      }
+
+      .sticky-terminal {
+        left: 0;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .user-name {
+        display: none;
+      }
+
+      .profile-metrics-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .recs-cards-row {
+        grid-template-columns: 1fr;
+      }
+
+      .ai-chips-row {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .greeting-banner-quote {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-nav-backdrop" id="mobileNavBackdrop" onclick="toggleMobileNav(false)"></div>
+
+  <aside class="sidebar">
+    <div>
+      <div class="brand">
+        <div class="brand-icon">🌿</div>
+        <div class="brand-text">
+          <h1>My Wellness</h1>
+          <p>Better Health · Brighter You</p>
+        </div>
+      </div>
+
+      <ul class="nav-menu">
+        <li class="nav-item active" onclick="switchNav('dashboard', this)">
+          <a><span>📊</span> Dashboard</a>
+        </li>
+        <li class="nav-item" onclick="switchNav('assessment', this)">
+          <a><span>🩺</span> Body Wellness</a>
+        </li>
+        <li class="nav-item" onclick="switchNav('reports', this)">
+          <a><span>🧪</span> Lab Reports & OCR</a>
+        </li>
+        <li id="nav-progress" class="nav-item" onclick="switchNav('progress', this)">
+          <a><span>📈</span> My Progress</a>
+        </li>
+        <li class="nav-item" onclick="switchNav('recs', this)">
+          <a><span>✦</span> Recommendations</a>
+        </li>
+        <li class="nav-item" onclick="switchNav('ai-chat', this)">
+          <a><span>🤖</span> AI Assistant</a>
+        </li>
+        
+        <li class="nav-divider"></li>
+        
+        <li class="nav-item" onclick="switchNav('mongodb', this)">
+          <a><span>🍃</span> MongoDB (10 Schemas)</a>
+        </li>
+        <li class="nav-item" onclick="switchNav('spring-api', this)">
+          <a><span>☕</span> Spring Boot APIs</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="sidebar-footer-illustration">
+      <div style="font-size: 1.8rem;">🧘‍♀️</div>
+      <div class="sidebar-footer-text">Small steps create big changes</div>
+    </div>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="top-header">
+      <button class="mobile-menu-toggle" aria-label="Open navigation" onclick="toggleMobileNav()">☰</button>
+
+      <div class="search-box">
+        🔍 <input type="text" placeholder="Search health metrics, reports, specialists...">
+      </div>
+
+      <div class="header-actions">
+        <div class="dev-pill">
+          <div class="status-dot"></div>
+          <span>Backend & Mongo Active</span>
+        </div>
+
+        <div class="user-profile" onclick="openProfileModal()">
+          <div class="user-avatar">A</div>
+          <span class="user-name">Gagan Deep Sir</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-content">
+      <section class="greeting-banner">
+        <div class="greeting-text">
+          <h2>Good Morning, Gagan Deep Sir 👋</h2>
+          <p>Here's your wellness overview for today.</p>
+        </div>
+        <div class="greeting-banner-quote">
+          A healthier you is a happier you ♡
+        </div>
+      </section>
+
+      <div id="view-dashboard" class="view-section active">
+        <section class="top-grid">
+          <div class="card profile-card">
+            <div class="card-header-flex">
+              <div class="card-title-flex">🍃 <span>Your Wellness Profile</span></div>
+            </div>
+
+            <div class="profile-main-layout">
+              <div class="profile-user-info">
+                <div class="profile-avatar-big">A</div>
+                <div class="profile-details">
+                  <h3>Gagan Deep Sir</h3>
+                  <p>User ID: MW-10234</p>
+                  <button class="btn btn-green-solid" style="margin-top: 8px;" onclick="openProfileModal()">View Profile →</button>
+                </div>
+              </div>
+
+              <div class="profile-metrics-group">
+                <div class="metric-item">
+                  <div class="metric-icon" style="background:#e0e7ff; color:#4338ca;">👤</div>
+                  <div>
+                    <div class="metric-text-title">Body Assessment</div>
+                    <div class="metric-text-desc">Completed</div>
+                  </div>
+                </div>
+
+                <div class="metric-item">
+                  <div class="metric-icon" style="background:#e0f2fe; color:#0284c7;">🧪</div>
+                  <div>
+                    <div class="metric-text-title">Lab Reports</div>
+                    <div class="metric-text-desc">1 Report Uploaded</div>
+                  </div>
+                </div>
+
+                <div class="metric-item">
+                  <div class="metric-icon" style="background:#dcfce7; color:#15803d;">🍃</div>
+                  <div>
+                    <div class="metric-text-title">Lifestyle</div>
+                    <div class="metric-text-desc">Updated Recently</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card journey-card">
+            <div>
+              <div class="card-title-flex" style="color: #d97706;">📈 <span>Your Wellness Journey</span></div>
+              <p>Track your progress and stay consistent with your goals.</p>
+            </div>
+            <button class="btn btn-white-outline" onclick="switchNav('progress', document.getElementById('nav-progress'))">View Progress →</button>
+          </div>
+        </section>
+
+        <section class="middle-grid">
+          <div class="card">
+            <div class="card-header-flex">
+              <div class="card-title-flex">🧪 <span>Lab Reports</span></div>
+              <span class="card-link" onclick="switchNav('reports')">View All →</span>
+            </div>
+
+            <div class="lab-report-box">
+              <div class="report-info">
+                <div class="doc-icon-box">📄</div>
+                <div>
+                  <h4 style="font-size:0.85rem; font-weight:700;">Health Checkup Report</h4>
+                  <p style="font-size:0.72rem; color:#64748b;">Uploaded on 06 Oct 2026</p>
+                  <button class="btn btn-outline-green" style="margin-top: 6px; padding: 3px 8px; font-size: 0.7rem;" onclick="switchNav('reports')">View Report →</button>
+                </div>
+              </div>
+
+              <div class="parameters-summary">
+                <div style="font-size:0.7rem; color:#64748b; font-weight:700;">OCR Results</div>
+                <div class="param-row"><span style="font-size:0.95rem; font-weight:800;">—</span> <span style="color:#64748b; font-size:0.7rem;">No report parsed yet</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header-flex">
+              <div class="card-title-flex">👤 <span>Body Wellness</span></div>
+              <span class="card-link" onclick="switchNav('assessment')">View All →</span>
+            </div>
+
+            <div style="font-size:0.72rem; color:#64748b; font-weight:600;">Last Assessment: 06 Oct 2026</div>
+
+            <div class="wellness-status-list">
+              <div class="wellness-status-item"><span>🫁 Digestion</span> <span class="status-pill pill-good">Good</span></div>
+              <div class="wellness-status-item"><span>⚡ Energy</span> <span class="status-pill pill-moderate">Moderate</span></div>
+              <div class="wellness-status-item"><span>💧 Hydration</span> <span id="dashboard-hydration-status" class="status-pill pill-good">Excellent</span></div>
+              <div class="wellness-status-item"><span>😴 Sleep</span> <span class="status-pill pill-attention">Needs Attention</span></div>
+              <div class="wellness-status-item"><span>🧘 Stress</span> <span class="status-pill pill-good">Low</span></div>
+            </div>
+
+            <button class="btn btn-green-solid" style="width: 100%;" onclick="switchNav('assessment')">Take Assessment →</button>
+          </div>
+
+          <div class="card">
+            <div class="card-header-flex">
+              <div class="card-title-flex">🍃 <span>Today's Wellness Plan</span></div>
+            </div>
+
+            <div class="plan-checklist">
+              <div class="plan-item">
+                <div class="plan-icon" style="background:#e0f2fe; color:#0284c7;">💧</div>
+                <div class="plan-text"><h5>Hydration</h5><p>Drink 8 glasses of water</p></div>
+                <div class="plan-checkbox" onclick="this.classList.toggle('checked')">✓</div>
+              </div>
+              <div class="plan-item">
+                <div class="plan-icon" style="background:#dcfce7; color:#15803d;">🥗</div>
+                <div class="plan-text"><h5>Nutrition</h5><p>Follow your personalized plan</p></div>
+                <div class="plan-checkbox" onclick="this.classList.toggle('checked')">✓</div>
+              </div>
+              <div class="plan-item">
+                <div class="plan-icon" style="background:#f3e8ff; color:#7c3aed;">🌙</div>
+                <div class="plan-text"><h5>Sleep</h5><p>Get 7-8 hours of sleep</p></div>
+                <div class="plan-checkbox" onclick="this.classList.toggle('checked')">✓</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="bottom-grid">
+          <div class="card">
+            <div class="card-header-flex">
+              <div class="card-title-flex">✦ <span>Personalized Recommendations</span></div>
+            </div>
+            <div style="font-size:0.72rem; color:#64748b;">Based on your profile and latest data</div>
+
+            <div class="recs-cards-row">
+              <div class="rec-mini-card rec-bg-green" onclick="switchNav('recs')"><span>🍏</span> <div style="font-size:0.75rem; font-weight:800;">Nutrition</div></div>
+              <div class="rec-mini-card rec-bg-blue" onclick="switchNav('recs')"><span>🏃</span> <div style="font-size:0.75rem; font-weight:800;">Lifestyle</div></div>
+              <div class="rec-mini-card rec-bg-purple" onclick="switchNav('recs')"><span>🧘</span> <div style="font-size:0.75rem; font-weight:800;">Wellness</div></div>
+              <div class="rec-mini-card rec-bg-cyan" onclick="switchNav('recs')"><span>💧</span> <div style="font-size:0.75rem; font-weight:800;">Hydration</div></div>
+            </div>
+
+            <button class="btn btn-outline-green" style="width: 100%;" onclick="switchNav('recs')">Explore Recommendations →</button>
+          </div>
+
+          <div class="card ai-chat-card">
+            <div class="card-header-flex">
+              <div class="card-title-flex" style="color: #7c3aed;">🤖 <span>Ask My Wellness</span></div>
+            </div>
+            <div style="font-size:0.72rem; color:#64748b;">Get instant answers about your health, reports and guidance.</div>
+
+            <div id="ai-chat-output" style="display:none; margin:12px 0; padding:12px; background:#f5f3ff; border:1px solid #ddd6fe; border-radius:10px; font-size:0.82rem;">
+              <div id="ai-chat-answer" style="color:#4c1d95; line-height:1.5; white-space:pre-wrap;"></div>
+              <div id="ai-chat-disclaimer" style="margin-top:8px; font-size:0.72rem; color:#7c3aed; font-style:italic;"></div>
+            </div>
+
+            <div class="ai-input-box">
+              <input type="text" id="ai-main-input" placeholder="Type your question..." onkeypress="if(event.key==='Enter') sendAiMessage()">
+              <button class="send-btn" onclick="sendAiMessage()">➔</button>
+            </div>
+
+            <div class="ai-chips-row">
+              <span class="ai-chip" onclick="sendAiMessage('Explain my latest report')">Explain my latest report</span>
+              <span class="ai-chip" onclick="sendAiMessage('What should I focus on?')">What should I focus on?</span>
+            </div>
+          </div>
+
+          <div class="card guidance-card">
+            <div class="guidance-icon-box">👥</div>
+            <h4 style="font-size:0.88rem; font-weight:800; color:#064e3b;">Need Professional Guidance?</h4>
+            <p style="font-size:0.72rem; color:#047857; margin-bottom: 10px;">Find relevant specialists based on your concern.</p>
+            <button class="btn btn-green-solid" onclick="alert('Opening Specialist Finder...')">Explore Specialists →</button>
+          </div>
+        </section>
+      </div>
+
+      <div id="view-ai-chat" class="view-section">
+        <div class="page-header">
+          <div>
+            <h1>AI Wellness Assistant</h1>
+            <p>Ask a question about your uploaded lab reports or general wellness.</p>
+          </div>
+        </div>
+        <div class="card ai-chat-card" style="max-width: 820px;">
+          <div class="card-header-flex">
+            <div class="card-title-flex" style="color:#7c3aed;">🤖 <span>Ask My Wellness</span></div>
+          </div>
+          <div style="font-size:0.82rem; color:#64748b;">Answers use your saved lab results when available. For clinical interpretation, speak with a healthcare professional.</div>
+          <div id="ai-assistant-output" style="display:none; margin:16px 0; padding:14px; background:#f5f3ff; border:1px solid #ddd6fe; border-radius:10px; font-size:0.9rem;">
+            <div id="ai-assistant-answer" style="color:#4c1d95; line-height:1.6; white-space:pre-wrap;"></div>
+            <div id="ai-assistant-disclaimer" style="margin-top:10px; font-size:0.76rem; color:#7c3aed; font-style:italic;"></div>
+          </div>
+          <div class="ai-input-box">
+            <input type="text" id="ai-assistant-input" placeholder="Ask about your report or wellness..." onkeypress="if(event.key==='Enter') sendAiMessage(undefined, 'assistant')">
+            <button class="send-btn" onclick="sendAiMessage(undefined, 'assistant')" aria-label="Send question">➔</button>
+          </div>
+          <div class="ai-chips-row">
+            <span class="ai-chip" onclick="sendAiMessage('Explain my latest report', 'assistant')">Explain my latest report</span>
+            <span class="ai-chip" onclick="sendAiMessage('What should I focus on?', 'assistant')">What should I focus on?</span>
+          </div>
+        </div>
+        <p style="max-width:820px; margin-top:12px; color:#64748b; font-size:0.78rem;">This assistant provides educational wellness information, not a diagnosis or treatment plan. Check extracted values against your original report.</p>
+      </div>
+
+      <div id="view-assessment" class="view-section">
+        <div class="card">
+          <div class="card-title-flex" style="margin-bottom:12px;">🩺 Body Wellness Assessment</div>
+          <form id="bodyWellnessForm" onsubmit="submitBodyWellnessAssessment(event)">
+
+            <label style="font-size:0.8rem; font-weight:700; display:block; margin-bottom:6px;">Water Intake (Liters)</label>
+            <input id="water-intake-liters" type="number" min="0" step="0.1" class="btn btn-white-outline" style="width:100%; text-align:left; margin-bottom:12px;" value="2.5" required>
+            <small style="display:block; color:#64748b; margin-bottom:12px;">Less than 1L = Poor | Equal to 1L = Moderate | 2L to 3L = Excellent | More than 5L = Not required</small>
+
+            <label style="font-size:0.8rem; font-weight:700; display:block; margin-bottom:6px;">Digestion</label>
+            <select id="body-digestion" class="btn btn-white-outline" style="width:100%; text-align:left; margin-bottom:12px;">
+              <option>Good</option>
+              <option>Fair</option>
+              <option>Poor</option>
+            </select>
+
+            <label style="font-size:0.8rem; font-weight:700; display:block; margin-bottom:6px;">Energy Level (1-10)</label>
+            <input id="body-energy" type="range" min="1" max="10" value="7" style="width:100%; accent-color:#10b981; margin-bottom:12px;">
+
+            <label style="font-size:0.8rem; font-weight:700; display:block; margin-bottom:6px;">Sleep Quality</label>
+            <select id="body-sleep" class="btn btn-white-outline" style="width:100%; text-align:left; margin-bottom:12px;">
+              <option>Excellent</option>
+              <option selected>Good</option>
+              <option>Fair</option>
+              <option>Poor</option>
+            </select>
+
+            <label style="font-size:0.8rem; font-weight:700; display:block; margin-bottom:6px;">Stress Level</label>
+            <select id="body-stress" class="btn btn-white-outline" style="width:100%; text-align:left; margin-bottom:18px;">
+              <option>Low</option>
+              <option selected>Moderate</option>
+              <option>High</option>
+            </select>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:18px;">
+              <label style="font-size:0.78rem; font-weight:700;">Acidity
+                <select id="body-acidity" class="btn btn-white-outline" style="width:100%; text-align:left; margin-top:5px;"><option>No</option><option>Yes</option><option>Mild</option></select>
+              </label>
+              <label style="font-size:0.78rem; font-weight:700;">Gas
+                <select id="body-gas" class="btn btn-white-outline" style="width:100%; text-align:left; margin-top:5px;"><option>No</option><option>Yes</option><option>Mild</option></select>
+              </label>
+              <label style="font-size:0.78rem; font-weight:700;">Bloating
+                <select id="body-bloating" class="btn btn-white-outline" style="width:100%; text-align:left; margin-top:5px;"><option>No</option><option>Yes</option><option>Mild</option></select>
+              </label>
+              <label style="font-size:0.78rem; font-weight:700;">Constipation
+                <select id="body-constipation" class="btn btn-white-outline" style="width:100%; text-align:left; margin-top:5px;"><option>No</option><option>Yes</option><option>Mild</option></select>
+              </label>
+              <label style="font-size:0.78rem; font-weight:700;">Fatigue
+                <select id="body-fatigue" class="btn btn-white-outline" style="width:100%; text-align:left; margin-top:5px;"><option>No</option><option>Yes</option><option>Mild</option></select>
+              </label>
+              <label style="font-size:0.78rem; font-weight:700;">Joint discomfort
+                <select id="body-joint-discomfort" class="btn btn-white-outline" style="width:100%; text-align:left; margin-top:5px;"><option>No</option><option>Yes</option><option>Mild</option></select>
+              </label>
+            </div>
+            <div id="body-assessment-error" style="display:none; color:#b91c1c; margin-bottom:12px; font-size:0.82rem;" role="alert"></div>
+            <button id="save-body-assessment-button" type="submit" class="btn btn-green-solid" style="width:100%;">Save Assessment to MongoDB</button>
+          </form>
+        </div>
+      </div>
+
+      <div id="view-reports" class="view-section">
+        <div class="card">
+          <div class="card-title-flex" style="margin-bottom:12px;">🧪 Python AI OCR Lab Report Parser</div>
+
+          <div class="upload-field">
+            <label class="upload-box" for="lab-report-file">
+              <input id="lab-report-file" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp" onchange="handleLabReportSelection(event)">
+              <span>Tap to select a report<br><small style="font-weight:600; opacity:0.8;">PDF, JPG, PNG, or WebP</small></span>
+            </label>
+            <div id="lab-report-selection" style="font-size:0.8rem; color:#475569;" aria-live="polite"></div>
+            <div id="lab-report-error" style="display:none; color:#b91c1c; font-size:0.82rem;" role="alert"></div>
+          </div>
+
+          <button id="parse-lab-report-button" class="btn btn-green-solid" type="button" onclick="parseLabReport()" disabled>Parse Uploaded Report</button>
+          <p id="lab-report-loading" style="display:none; margin-top:12px; color:#047857; font-size:0.85rem;" role="status">Uploading report and processing OCR…</p>
+          <section id="lab-ocr-results" style="display:none; margin-top:20px;" aria-live="polite">
+            <h3 id="lab-ocr-result-message" style="font-weight:800; margin-bottom:10px;"></h3>
+            <div id="lab-ocr-ai-card" style="display:none; margin-bottom:16px; padding:14px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; font-size:0.83rem;">
+              <div style="font-weight:800; color:#15803d; margin-bottom:6px;">🤖 AI Wellness Insights</div>
+              <div id="lab-ocr-ai-obs" style="color:#166534; line-height:1.5;"></div>
+              <ul id="lab-ocr-ai-tips" style="margin:8px 0 0 18px; padding:0; color:#166534;"></ul>
+              <div id="lab-ocr-ai-disclaimer" style="margin-top:10px; font-size:0.75rem; color:#64748b; font-style:italic;"></div>
+            </div>
+            <div style="overflow-x:auto;">
+              <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.82rem;">
+                <thead>
+                  <tr style="border-bottom:1px solid #e2e8f0; color:#64748b;">
+                    <th style="padding:10px 8px;">Parameter</th>
+                    <th style="padding:10px 8px;">Value</th>
+                    <th style="padding:10px 8px;">Unit</th>
+                    <th style="padding:10px 8px;">Reference Range</th>
+                    <th style="padding:10px 8px;">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="lab-ocr-results-body"></tbody>
+              </table>
+            </div>
+          </section>
+          <section style="margin-top:24px;">
+            <h3 style="font-weight:800; margin-bottom:10px;">Report history</h3>
+            <div id="lab-report-history-loading" style="display:none; color:#047857; font-size:0.82rem;" role="status">Loading report history…</div>
+            <div id="lab-report-history-error" style="display:none; color:#b91c1c; font-size:0.82rem;" role="alert"></div>
+            <div id="lab-report-history-empty" style="display:none; color:#64748b; font-size:0.82rem;">No reports have been uploaded yet.</div>
+            <div id="lab-report-history" style="display:grid; gap:12px;"></div>
+          </section>
+        </div>
+      </div>
+
+      <div id="view-progress" class="view-section">
+        <section class="greeting-banner" style="margin-bottom:20px;">
+          <div class="greeting-text">
+            <h2>My Progress</h2>
+            <p>Track your wellness journey over time.</p>
+          </div>
+          <label style="display:flex; align-items:center; gap:10px; font-size:0.8rem; font-weight:700;">
+            Date range
+            <select id="progress-range" class="btn btn-white-outline" onchange="loadProgress()">
+              <option value="7d">7 Days</option>
+              <option value="30d">30 Days</option>
+              <option value="90d">90 Days</option>
+              <option value="all" selected>All Time</option>
+            </select>
+          </label>
+        </section>
+
+        <div id="progress-loading" class="card" style="display:none; color:#047857;" role="status">Loading your progress…</div>
+        <div id="progress-error" class="card" style="display:none; color:#b91c1c;" role="alert"></div>
+        <div id="progress-empty" class="card" style="display:none; text-align:center; color:#64748b; margin-bottom:18px;">
+          No wellness records yet for this date range. Add an assessment, lifestyle record, or lab report to start your progress history.
+        </div>
+
+        <div class="middle-grid" style="margin-bottom:20px;">
+          <article class="card"><div class="metric-text-desc">Body assessments</div><div id="progress-total-assessments" class="metric-text-title" style="font-size:1.5rem; margin-top:8px;">—</div></article>
+          <article class="card"><div class="metric-text-desc">Laboratory reports analyzed</div><div id="progress-total-reports" class="metric-text-title" style="font-size:1.5rem; margin-top:8px;">—</div></article>
+          <article class="card"><div class="metric-text-desc">Lifestyle records</div><div id="progress-total-lifestyle" class="metric-text-title" style="font-size:1.5rem; margin-top:8px;">—</div></article>
+          <article class="card"><div class="metric-text-desc">Average daily water intake</div><div id="progress-average-water" class="metric-text-title" style="font-size:1.5rem; margin-top:8px;">—</div></article>
+          <article class="card"><div class="metric-text-desc">Average sleep duration</div><div id="progress-average-sleep" class="metric-text-title" style="font-size:1.5rem; margin-top:8px;">—</div></article>
+          <article class="card"><div class="metric-text-desc">Average energy level</div><div id="progress-average-energy" class="metric-text-title" style="font-size:1.5rem; margin-top:8px;">—</div></article>
+        </div>
+
+        <section class="middle-grid" style="margin-bottom:20px;">
+          <article class="card"><h3 class="card-title-flex">💧 Water intake</h3><div id="progress-hydration-chart"></div><div id="progress-hydration-average" class="metric-text-desc"></div></article>
+          <article class="card"><h3 class="card-title-flex">🌙 Sleep duration</h3><div id="progress-sleep-chart"></div><div id="progress-sleep-average" class="metric-text-desc"></div></article>
+          <article class="card"><h3 class="card-title-flex">⚡ Energy level</h3><div id="progress-energy-chart"></div><div id="progress-energy-average" class="metric-text-desc"></div></article>
+        </section>
+
+        <section class="middle-grid" style="margin-bottom:20px;">
+          <article class="card"><h3 class="card-title-flex">🏃 Physical activity</h3><div id="progress-activity-chart"></div><div id="progress-activity-average" class="metric-text-desc"></div></article>
+          <article class="card" style="grid-column:span 2;"><h3 class="card-title-flex">🩺 Body wellness history</h3>
+            <div style="overflow-x:auto; margin-top:12px;">
+              <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.78rem; min-width:900px;">
+                <thead><tr style="border-bottom:1px solid #e2e8f0; color:#64748b;">
+                  <th style="padding:8px;">Date</th><th style="padding:8px;">Acidity</th><th style="padding:8px;">Gas</th><th style="padding:8px;">Bloating</th><th style="padding:8px;">Constipation</th><th style="padding:8px;">Fatigue</th><th style="padding:8px;">Joint discomfort</th><th style="padding:8px;">Energy</th><th style="padding:8px;">Digestion</th><th style="padding:8px;">Hydration</th><th style="padding:8px;">Sleep</th><th style="padding:8px;">Stress</th>
+                </tr></thead><tbody id="progress-symptom-history"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <section class="card" style="margin-bottom:20px;">
+          <h3 class="card-title-flex">🍃 Add lifestyle record</h3>
+          <form id="progress-lifestyle-form" onsubmit="saveLifestyleRecord(event)" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; align-items:end; margin-top:14px;">
+            <label style="font-size:0.78rem; font-weight:700;">Water intake (L)<input id="lifestyle-water" type="number" min="0" step="0.1" required class="btn btn-white-outline" style="width:100%; margin-top:6px; text-align:left;"></label>
+            <label style="font-size:0.78rem; font-weight:700;">Sleep duration (hours)<input id="lifestyle-sleep" type="number" min="0" max="24" step="0.1" required class="btn btn-white-outline" style="width:100%; margin-top:6px; text-align:left;"></label>
+            <label style="font-size:0.78rem; font-weight:700;">Physical activity<input id="lifestyle-activity" type="text" maxlength="160" class="btn btn-white-outline" style="width:100%; margin-top:6px; text-align:left;" placeholder="e.g. Walking 30 minutes"></label>
+            <button id="save-lifestyle-button" type="submit" class="btn btn-green-solid">Save lifestyle record</button>
+          </form>
+          <div id="lifestyle-save-error" style="display:none; color:#b91c1c; margin-top:10px; font-size:0.82rem;" role="alert"></div>
+        </section>
+
+        <section class="middle-grid" style="margin-bottom:20px;">
+          <article class="card" style="grid-column:span 2;">
+            <div class="card-header-flex">
+              <h3 class="card-title-flex">🧪 Laboratory parameter history</h3>
+              <select id="lab-parameter-selector" class="btn btn-white-outline" onchange="renderLabParameterHistory()"><option value="">No parameters</option></select>
+            </div>
+            <div id="lab-parameter-chart"></div>
+            <div style="overflow-x:auto;">
+              <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.8rem; margin-top:12px;">
+                <thead><tr style="border-bottom:1px solid #e2e8f0; color:#64748b;"><th style="padding:8px;">Date</th><th style="padding:8px;">Report</th><th style="padding:8px;">Value</th><th style="padding:8px;">Unit</th><th style="padding:8px;">Reference range</th><th style="padding:8px;">Status</th><th style="padding:8px;">Open</th></tr></thead>
+                <tbody id="lab-parameter-table"></tbody>
+              </table>
+            </div>
+          </article>
+          <article class="card"><h3 class="card-title-flex">🕒 Wellness activity</h3><div id="progress-timeline" style="margin-top:12px;"></div></article>
+        </section>
+      </div>
+
+      <div id="view-recs" class="view-section">
+        <div class="card">
+          <div class="card-title-flex" style="margin-bottom:12px;">✦ Recommendation Engine</div>
+          <p style="font-size:0.85rem; color:#475569; margin-bottom:14px;">Fresh suggestions based on your saved lab results when available.</p>
+          <div id="recommendations-loading" style="display:none; color:#64748b; padding:12px 0;">Generating fresh recommendations…</div>
+          <div id="recommendations-error" style="display:none; color:#b91c1c; padding:12px 0;" role="alert"></div>
+          <div id="recommendations-list" style="display:grid; gap:12px;"></div>
+          <p style="margin-top:14px; color:#64748b; font-size:0.76rem;">These are general educational suggestions, not a diagnosis or treatment plan. Discuss out-of-range results with a healthcare professional.</p>
+        </div>
+      </div>
+
+      <div id="view-mongodb" class="view-section">
+        <div class="card">
+          <div class="card-title-flex" style="margin-bottom:12px;">🍃 MongoDB Explorer (10 Schemas)</div>
+          <pre class="doc-viewer">{ "db": "my_wellness_db", "collections": ["Users", "WellnessProfiles", "LabReports", "AssessmentResponses", "SkinData", "HairData", "BodyData", "LifestyleData", "Recommendations", "ProgressRecords"] }</pre>
+        </div>
+      </div>
+
+      <div id="view-spring-api" class="view-section">
+        <div class="card">
+          <div class="card-title-flex" style="margin-bottom:12px;">☕ Spring Boot REST APIs</div>
+          <pre class="doc-viewer">{ "status": 200, "message": "Spring Boot REST Controller active on port 8080" }</pre>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div class="sticky-terminal">
+    <div class="terminal-header">
+      <span>● Spring Boot & MongoDB Live Console</span>
+    </div>
+    <div class="terminal-body">
+      <div class="log-line"><span class="log-time">[07:13:00]</span> <span class="log-success">[SpringApplication]</span> <span>MyWellnessApplication initialized. All endpoints active.</span></div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = (window.MYWELL_API_BASE_URL || new URLSearchParams(window.location.search).get('api') || 'http://localhost:8080').replace(/\/+$/, '');
+    let progressResponse = null;
+    let progressRequestId = 0;
+    let recommendationVisitCount = 0;
+    let previousRecommendationSet = [];
+
+    function getAuthHeaders() {
+      const headers = { Accept: 'application/json' };
+      const token = localStorage.getItem('jwtToken')
+        || localStorage.getItem('accessToken')
+        || localStorage.getItem('token');
+      if (token) headers.Authorization = token.startsWith('Bearer ') ? token : 'Bearer ' + token;
+      return headers;
+    }
+
+    async function requestApi(path, options = {}) {
+      let response;
+      try {
+        response = await fetch(API_BASE_URL + path, {
+          ...options,
+          headers: { ...getAuthHeaders(), ...(options.headers || {}) }
+        });
+      } catch {
+        throw new Error(`The request to ${API_BASE_URL}${path} failed before an HTTP response. Check that Spring Boot is listening on port 8080 and that this page is served from an allowed localhost origin (not file://). Browser console details can distinguish connection refused from CORS.`);
+      }
+      const responseText = await response.text();
+      let payload = {};
+      if (responseText) {
+        try {
+          payload = JSON.parse(responseText);
+        } catch {
+          throw new Error(responseText);
+        }
+      }
+      if (!response.ok || payload.success === false) {
+        throw new Error(payload.message || 'Request failed with status ' + response.status);
+      }
+      return payload.data;
+    }
+
+    function formatProgressDate(value) {
+      if (!value) return 'Date unavailable';
+      const date = new Date(value);
+      return Number.isNaN(date.getTime())
+        ? 'Date unavailable'
+        : date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function showProgressValue(value, suffix = '') {
+      return value == null || !Number.isFinite(Number(value))
+        ? '—'
+        : Number(value).toFixed(1) + suffix;
+    }
+
+    function setProgressText(id, value) {
+      document.getElementById(id).textContent = value;
+    }
+
+    function renderProgressChart(containerId, averageId, history, unit) {
+      const container = document.getElementById(containerId);
+      const average = document.getElementById(averageId);
+      container.replaceChildren();
+
+      const points = (history || [])
+        .filter(point => point.value != null && Number.isFinite(Number(point.value)) && point.date)
+        .slice()
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+      if (!points.length) {
+        container.textContent = 'No records for this date range.';
+        average.textContent = '';
+        return;
+      }
+
+      const width = 460;
+      const height = 180;
+      const padding = { top: 16, right: 16, bottom: 34, left: 44 };
+      const values = points.map(point => Number(point.value));
+      const minValue = Math.min(...values);
+      const maxValue = Math.max(...values);
+      const spread = maxValue - minValue || Math.max(Math.abs(maxValue) * 0.1, 1);
+      const chartMin = minValue - spread * 0.12;
+      const chartMax = maxValue + spread * 0.12;
+      const x = index => padding.left + (points.length === 1
+        ? (width - padding.left - padding.right) / 2
+        : index * (width - padding.left - padding.right) / (points.length - 1));
+      const y = value => height - padding.bottom
+        - ((value - chartMin) / (chartMax - chartMin)) * (height - padding.top - padding.bottom);
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+      svg.setAttribute('role', 'img');
+      svg.setAttribute('aria-label', 'Recorded progress over time');
+      svg.style.width = '100%';
+      svg.style.height = 'auto';
+
+      const axis = document.createElementNS(svg.namespaceURI, 'line');
+      axis.setAttribute('x1', padding.left);
+      axis.setAttribute('x2', width - padding.right);
+      axis.setAttribute('y1', height - padding.bottom);
+      axis.setAttribute('y2', height - padding.bottom);
+      axis.setAttribute('stroke', '#cbd5e1');
+      svg.appendChild(axis);
+
+      const path = document.createElementNS(svg.namespaceURI, 'polyline');
+      path.setAttribute('points', points.map((point, index) => `${x(index)},${y(Number(point.value))}`).join(' '));
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke', '#059669');
+      path.setAttribute('stroke-width', '3');
+      path.setAttribute('stroke-linecap', 'round');
+      path.setAttribute('stroke-linejoin', 'round');
+      svg.appendChild(path);
+
+      points.forEach((point, index) => {
+        const circle = document.createElementNS(svg.namespaceURI, 'circle');
+        circle.setAttribute('cx', x(index));
+        circle.setAttribute('cy', y(Number(point.value)));
+        circle.setAttribute('r', '4');
+        circle.setAttribute('fill', '#047857');
+        const title = document.createElementNS(svg.namespaceURI, 'title');
+        title.textContent = `${formatProgressDate(point.date)}: ${point.value} ${unit || point.unit || ''}`;
+        circle.appendChild(title);
+        svg.appendChild(circle);
+      });
+
+      [points[0], points[points.length - 1]].forEach((point, index) => {
+        const label = document.createElementNS(svg.namespaceURI, 'text');
+        label.setAttribute('x', index === 0 ? padding.left : width - padding.right);
+        label.setAttribute('y', height - 8);
+        label.setAttribute('text-anchor', index === 0 ? 'start' : 'end');
+        label.setAttribute('fill', '#64748b');
+        label.setAttribute('font-size', '10');
+        label.textContent = formatProgressDate(point.date);
+        svg.appendChild(label);
+      });
+
+      container.appendChild(svg);
+      const mean = values.reduce((total, value) => total + value, 0) / values.length;
+      const change = values[values.length - 1] - values[0];
+      const trend = change > 0 ? 'increased' : change < 0 ? 'decreased' : 'unchanged';
+      average.textContent = `Average ${mean.toFixed(1)} ${unit} · ${trend} by ${Math.abs(change).toFixed(1)} ${unit} across recorded points`;
+    }
+
+    function renderActivityHistory(history) {
+      const container = document.getElementById('progress-activity-chart');
+      container.replaceChildren();
+      const records = (history || []).filter(item => item.date && item.value != null);
+      if (!records.length) {
+        container.textContent = 'No physical activity records for this date range.';
+        return;
+      }
+
+      const numericRecords = records.map(item => {
+        const match = String(item.value).match(/(-?\d+(?:[.,]\d+)?)\s*(minutes?|mins?|hours?|hrs?|steps?|km|miles?)\b/i);
+        return match
+          ? { ...item, value: Number(match[1].replace(',', '.')), unit: match[2].toLowerCase().replace(/s$/, '') }
+          : null;
+      }).filter(Boolean);
+      const units = [...new Set(numericRecords.map(item => item.unit))];
+      if (numericRecords.length === records.length && units.length === 1) {
+        renderProgressChart('progress-activity-chart', 'progress-activity-average', numericRecords, units[0]);
+        return;
+      }
+
+      document.getElementById('progress-activity-average').textContent = '';
+      const list = document.createElement('ul');
+      list.style.paddingLeft = '18px';
+      list.style.color = '#475569';
+      list.style.fontSize = '0.82rem';
+      records.slice().reverse().forEach(item => {
+        const row = document.createElement('li');
+        row.style.marginBottom = '8px';
+        row.textContent = `${formatProgressDate(item.date)} · ${item.value}`;
+        list.appendChild(row);
+      });
+      container.appendChild(list);
+      if (numericRecords.length && units.length > 1) {
+        const note = document.createElement('p');
+        note.style.color = '#64748b';
+        note.style.fontSize = '0.75rem';
+        note.textContent = 'Activity entries use different units, so they are listed without comparing them on one chart.';
+        container.appendChild(note);
+      }
+    }
+
+    function renderSymptomHistory(history) {
+      const tbody = document.getElementById('progress-symptom-history');
+      tbody.replaceChildren();
+      if (!history || history.length === 0) {
+        const row = tbody.insertRow();
+        const cell = row.insertCell();
+        cell.colSpan = 12;
+        cell.textContent = 'No body assessment records for this date range.';
+        cell.style.padding = '12px 8px';
+        return;
+      }
+      history.slice().reverse().forEach(item => {
+        const row = tbody.insertRow();
+        [
+          formatProgressDate(item.date),
+          item.acidity,
+          item.gas,
+          item.bloating,
+          item.constipation,
+          item.fatigue,
+          item.jointDiscomfort,
+          item.energyLevel == null ? null : `${item.energyLevel}/10`,
+          item.digestion,
+          item.hydration,
+          item.sleepQuality,
+          item.stressLevel
+        ].forEach(value => {
+          const cell = row.insertCell();
+          cell.textContent = value == null || value === '' ? '—' : String(value);
+          cell.style.padding = '9px 8px';
+          cell.style.borderBottom = '1px solid #f1f5f9';
+        });
+      });
+    }
+
+    function renderLabParameterHistory() {
+      if (!progressResponse) return;
+      const selectedKey = document.getElementById('lab-parameter-selector').value;
+      const table = document.getElementById('lab-parameter-table');
+      const chart = document.getElementById('lab-parameter-chart');
+      table.replaceChildren();
+      chart.replaceChildren();
+      const [selectedName, selectedUnit] = selectedKey.split('\u001f');
+      if (!selectedName) {
+        chart.textContent = 'No laboratory parameters in this date range.';
+        return;
+      }
+
+      const matchingReports = progressResponse.labParameterHistory
+        .filter(report => (report.parameters || []).some(parameter =>
+          parameter.parameter === selectedName && (parameter.unit || '') === selectedUnit))
+        .slice()
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+      const points = [];
+      matchingReports.forEach(report => {
+        const parameter = report.parameters.find(item =>
+          item.parameter === selectedName && (item.unit || '') === selectedUnit);
+        if (!parameter) return;
+        points.push({
+          date: report.date,
+          value: parameter.value,
+          unit: parameter.unit,
+          referenceRange: parameter.referenceRange,
+          status: parameter.status,
+          reportId: report.reportId,
+          reportName: report.reportName
+        });
+      });
+
+      if (points.length) {
+        const temporaryAverage = document.createElement('div');
+        temporaryAverage.id = 'lab-parameter-chart-average';
+        temporaryAverage.style.color = '#64748b';
+        temporaryAverage.style.fontSize = '0.78rem';
+        chart.appendChild(temporaryAverage);
+        const chartNode = document.createElement('div');
+        chartNode.id = 'lab-parameter-chart-line';
+        chart.appendChild(chartNode);
+        renderProgressChart('lab-parameter-chart-line', 'lab-parameter-chart-average', points, selectedUnit);
+      } else {
+        chart.textContent = 'No values for this parameter in the selected range.';
+      }
+
+      points.slice().reverse().forEach(point => {
+        const row = table.insertRow();
+        [formatProgressDate(point.date), point.reportName, point.value, point.unit, point.referenceRange, point.status]
+          .forEach(value => {
+            const cell = row.insertCell();
+            cell.textContent = value == null ? '—' : String(value);
+            cell.style.padding = '9px 8px';
+            cell.style.borderBottom = '1px solid #f1f5f9';
+          });
+        const openCell = row.insertCell();
+        openCell.style.padding = '9px 8px';
+          const report = matchingReports.find(item => item.reportId === point.reportId);
+          if (report && report.fileAvailable) {
+            const openButton = document.createElement('button');
+            openButton.type = 'button';
+            openButton.className = 'btn btn-outline-green';
+            openButton.textContent = 'Open';
+            openButton.addEventListener('click', () => openProgressReport(point.reportId));
+            openCell.appendChild(openButton);
+          } else {
+            openCell.textContent = 'File unavailable';
+          }
+      });
+    }
+
+    async function openProgressReport(reportId) {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/reports/${encodeURIComponent(reportId)}/file`, {
+          headers: getAuthHeaders()
+        });
+        if (!response.ok) {
+          const payload = await response.json().catch(() => ({}));
+          throw new Error(payload.message || 'The original report could not be opened.');
+        }
+        const fileUrl = URL.createObjectURL(await response.blob());
+        const link = document.createElement('a');
+        link.href = fileUrl;
+        link.target = '_blank';
+        link.rel = 'noopener';
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(fileUrl), 60000);
+      } catch (error) {
+        document.getElementById('progress-error').textContent = error.message;
+        document.getElementById('progress-error').style.display = 'block';
+      }
+    }
+
+    function renderWellnessTimeline(history) {
+      const container = document.getElementById('progress-timeline');
+      container.replaceChildren();
+      if (!history || history.length === 0) {
+        container.textContent = 'No wellness activity recorded for this date range.';
+        return;
+      }
+      history.slice().reverse().forEach(item => {
+        const entry = document.createElement('div');
+        entry.style.borderLeft = '2px solid #a7f3d0';
+        entry.style.padding = '0 0 16px 12px';
+        entry.style.marginLeft = '4px';
+        const heading = document.createElement('strong');
+        heading.style.display = 'block';
+        heading.style.fontSize = '0.82rem';
+        heading.textContent = item.title || item.type;
+        const description = document.createElement('div');
+        description.style.color = '#64748b';
+        description.style.fontSize = '0.76rem';
+        description.style.marginTop = '3px';
+        description.textContent = item.description || '';
+        const date = document.createElement('time');
+        date.style.display = 'block';
+        date.style.color = '#94a3b8';
+        date.style.fontSize = '0.7rem';
+        date.style.marginTop = '3px';
+        date.textContent = formatProgressDate(item.date);
+        entry.append(heading, description, date);
+        container.appendChild(entry);
+      });
+    }
+
+    function renderProgress(data) {
+      progressResponse = data;
+      const overview = data.overview || {};
+      setProgressText('progress-total-assessments', overview.totalBodyAssessments ?? 0);
+      setProgressText('progress-total-reports', overview.totalLabReportsAnalyzed ?? 0);
+      setProgressText('progress-total-lifestyle', overview.totalLifestyleRecords ?? 0);
+      setProgressText('progress-average-water', showProgressValue(overview.averageDailyWaterIntakeLiters, ' L'));
+      setProgressText('progress-average-sleep', showProgressValue(overview.averageSleepDurationHours, ' h'));
+      setProgressText('progress-average-energy', showProgressValue(overview.averageEnergyLevel, ' /10'));
+
+      renderProgressChart('progress-hydration-chart', 'progress-hydration-average', data.hydrationHistory, 'L');
+      renderProgressChart('progress-sleep-chart', 'progress-sleep-average', data.sleepHistory, 'hours');
+      renderProgressChart('progress-energy-chart', 'progress-energy-average', data.energyHistory, '/10');
+      renderActivityHistory(data.activityHistory);
+      renderSymptomHistory(data.symptomHistory);
+      renderWellnessTimeline(data.wellnessTimeline);
+
+      const selector = document.getElementById('lab-parameter-selector');
+      const previousSelection = selector.value;
+      const options = new Map();
+      (data.labParameterHistory || []).forEach(report => {
+        (report.parameters || []).forEach(parameter => {
+          const unit = parameter.unit || '';
+          const key = `${parameter.parameter}\u001f${unit}`;
+          if (!options.has(key)) options.set(key, `${parameter.parameter}${unit ? ' (' + unit + ')' : ''}`);
+        });
+      });
+      selector.replaceChildren();
+      if (!options.size) {
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = 'No parameters';
+        selector.appendChild(option);
+      } else {
+        options.forEach((label, key) => {
+          const option = document.createElement('option');
+          option.value = key;
+          option.textContent = label;
+          selector.appendChild(option);
+        });
+        if (options.has(previousSelection)) selector.value = previousSelection;
+      }
+      renderLabParameterHistory();
+
+      const hasAnyRecords = [
+        data.hydrationHistory,
+        data.sleepHistory,
+        data.energyHistory,
+        data.activityHistory,
+        data.symptomHistory,
+        data.labParameterHistory,
+        data.wellnessTimeline
+      ].some(items => items && items.length);
+      document.getElementById('progress-empty').style.display = hasAnyRecords ? 'none' : 'block';
+    }
+
+    async function loadProgress() {
+      const requestId = ++progressRequestId;
+      const loading = document.getElementById('progress-loading');
+      const error = document.getElementById('progress-error');
+      loading.style.display = 'block';
+      error.style.display = 'none';
+      error.textContent = '';
+      try {
+        const range = document.getElementById('progress-range').value;
+        const data = await requestApi(`/api/progress?range=${encodeURIComponent(range)}`);
+        if (requestId === progressRequestId) renderProgress(data);
+      } catch (requestError) {
+        if (requestId === progressRequestId) {
+          error.textContent = `Could not load progress: ${requestError.message}`;
+          error.style.display = 'block';
+        }
+      } finally {
+        if (requestId === progressRequestId) loading.style.display = 'none';
+      }
+    }
+
+    async function saveLifestyleRecord(event) {
+      event.preventDefault();
+      const button = document.getElementById('save-lifestyle-button');
+      const error = document.getElementById('lifestyle-save-error');
+      error.style.display = 'none';
+      button.disabled = true;
+      try {
+        await requestApi('/api/lifestyle', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            waterIntakeLiters: Number(document.getElementById('lifestyle-water').value),
+            sleepDurationHours: Number(document.getElementById('lifestyle-sleep').value),
+            physicalActivity: document.getElementById('lifestyle-activity').value.trim() || null
+          })
+        });
+        document.getElementById('progress-lifestyle-form').reset();
+        await loadProgress();
+      } catch (requestError) {
+        error.textContent = `Could not save lifestyle record: ${requestError.message}`;
+        error.style.display = 'block';
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    async function submitBodyWellnessAssessment(event) {
+      event.preventDefault();
+      const button = document.getElementById('save-body-assessment-button');
+      const error = document.getElementById('body-assessment-error');
+      const waterInput = document.getElementById('water-intake-liters');
+      const liters = Number(waterInput.value);
+      if (!Number.isFinite(liters) || liters < 0) {
+        waterInput.setCustomValidity('Enter a valid water intake of 0 liters or more.');
+        waterInput.reportValidity();
+        return;
+      }
+      waterInput.setCustomValidity('');
+      error.style.display = 'none';
+      button.disabled = true;
+      const hydrationStatus = getHydrationStatus(liters);
+      const value = id => document.getElementById(id).value;
+
+      try {
+        await requestApi('/api/body-assessments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            acidity: value('body-acidity'),
+            gas: value('body-gas'),
+            bloating: value('body-bloating'),
+            constipation: value('body-constipation'),
+            fatigue: value('body-fatigue'),
+            jointDiscomfort: value('body-joint-discomfort'),
+            energyLevel: value('body-energy'),
+            digestion: value('body-digestion'),
+            hydration: hydrationStatus,
+            sleepQuality: value('body-sleep'),
+            stressLevel: value('body-stress')
+          })
+        });
+        await loadProgress();
+        await requestApi('/api/lifestyle', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            waterIntakeLiters: liters,
+            sleepDurationHours: 0,
+            physicalActivity: null
+          })
+        });
+
+        const dashboardStatus = document.getElementById('dashboard-hydration-status');
+        dashboardStatus.textContent = `${hydrationStatus} (${liters}L)`;
+        dashboardStatus.classList.remove('pill-good', 'pill-moderate', 'pill-attention');
+        dashboardStatus.classList.add(
+          hydrationStatus === 'Excellent' ? 'pill-good'
+            : hydrationStatus === 'Poor' ? 'pill-attention'
+              : 'pill-moderate'
+        );
+        document.getElementById('bodyWellnessForm').reset();
+        await loadProgress();
+        switchNav('progress', document.getElementById('nav-progress'));
+      } catch (requestError) {
+        error.textContent = `Could not save the assessment: ${requestError.message}`;
+        error.style.display = 'block';
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    let selectedLabReport = null;
+
+    function handleLabReportSelection(event) {
+      const input = event.target;
+      const file = input.files && input.files[0];
+      const selection = document.getElementById('lab-report-selection');
+      const error = document.getElementById('lab-report-error');
+      const parseButton = document.getElementById('parse-lab-report-button');
+      const results = document.getElementById('lab-ocr-results');
+
+      selectedLabReport = null;
+      parseButton.disabled = true;
+      results.style.display = 'none';
+      error.style.display = 'none';
+      error.textContent = '';
+      selection.textContent = '';
+      if (!file) return;
+
+      const allowedExtensions = ['.pdf', '.jpg', '.jpeg', '.png', '.webp'];
+      const extension = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+      if (!allowedExtensions.includes(extension)) {
+        input.value = '';
+        error.textContent = 'Unsupported file type. Select a PDF, JPG, JPEG, PNG, or WebP report.';
+        error.style.display = 'block';
+        return;
+      }
+      if (file.size === 0 || file.size > 10 * 1024 * 1024) {
+        input.value = '';
+        error.textContent = file.size === 0
+          ? 'The selected file is empty.'
+          : 'The report must be 10 MB or smaller.';
+        error.style.display = 'block';
+        return;
+      }
+
+      selectedLabReport = file;
+      selection.textContent = file.name + ' · ' + (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+      parseButton.disabled = false;
+    }
+
+    async function parseLabReport() {
+      if (!selectedLabReport) return;
+
+      const parseButton = document.getElementById('parse-lab-report-button');
+      const loading = document.getElementById('lab-report-loading');
+      const error = document.getElementById('lab-report-error');
+      const results = document.getElementById('lab-ocr-results');
+      const resultMessage = document.getElementById('lab-ocr-result-message');
+      const resultsBody = document.getElementById('lab-ocr-results-body');
+
+      parseButton.disabled = true;
+      loading.style.display = 'block';
+      error.style.display = 'none';
+      error.textContent = '';
+      results.style.display = 'none';
+      resultsBody.replaceChildren();
+
+      try {
+        const formData = new FormData();
+        formData.append('file', selectedLabReport);
+        const reportData = await requestApi('/api/reports/parse', {
+          method: 'POST',
+          body: formData
+        });
+        const parameters = Array.isArray(reportData.parameters)
+          ? reportData.parameters
+          : [];
+        resultMessage.textContent = `${reportData.report.reportName} · ${parameters.length} extracted parameter${parameters.length === 1 ? '' : 's'}`;
+
+        const aiCard = document.getElementById('lab-ocr-ai-card');
+        const aiObs = document.getElementById('lab-ocr-ai-obs');
+        const aiTips = document.getElementById('lab-ocr-ai-tips');
+        const aiDisc = document.getElementById('lab-ocr-ai-disclaimer');
+        if (aiCard && reportData.aiSummary) {
+          const s = reportData.aiSummary;
+          aiObs.textContent = s.keyObservations || '';
+          aiTips.replaceChildren();
+          if (Array.isArray(s.wellnessRecommendations)) {
+            s.wellnessRecommendations.forEach(t => {
+              const li = document.createElement('li');
+              li.textContent = t;
+              aiTips.appendChild(li);
+            });
+          }
+          aiDisc.textContent = s.disclaimer || '';
+          aiCard.style.display = 'block';
+        } else if (aiCard) {
+          aiCard.style.display = 'none';
+        }
+
+        renderLabResultRows(resultsBody, parameters);
+        results.style.display = 'block';
+        await loadLabReportHistory();
+        await loadProgress();
+      } catch (requestError) {
+        error.textContent = 'OCR failed: ' + requestError.message;
+        error.style.display = 'block';
+      } finally {
+        loading.style.display = 'none';
+        parseButton.disabled = !selectedLabReport;
+      }
+    }
+
+    function getHydrationStatus(liters) {
+      if (liters < 1) return 'Poor';
+      if (liters === 1) return 'Moderate';
+      if (liters >= 2 && liters <= 3) return 'Excellent';
+      if (liters > 5) return 'Not required';
+      return 'Moderate';
+    }
+
+    function toggleMobileNav(forceOpen) {
+      const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : !document.body.classList.contains('sidebar-open');
+      document.body.classList.toggle('sidebar-open', shouldOpen);
+      const backdrop = document.getElementById('mobileNavBackdrop');
+      if (backdrop) backdrop.classList.toggle('active', shouldOpen);
+    }
+
+    function switchNav(viewId, el) {
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+
+      if (el) el.classList.add('active');
+      const targetView = document.getElementById('view-' + viewId);
+      if (targetView) targetView.classList.add('active');
+
+      if (viewId === 'progress') loadProgress();
+      if (viewId === 'reports') loadLabReportHistory();
+      if (viewId === 'recs') loadFreshRecommendations();
+
+      if (window.innerWidth <= 768) {
+        toggleMobileNav(false);
+      }
+    }
+
+    function escapeHtml(str) {
+      if (str == null) return '';
+      return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+    }
+
+    function renderLabResultRows(tbody, parameters) {
+      tbody.replaceChildren();
+      if (!parameters.length) {
+        const row = tbody.insertRow();
+        const cell = row.insertCell();
+        cell.colSpan = 5;
+        cell.textContent = 'No laboratory parameters were extracted from this report.';
+        cell.style.padding = '12px 8px';
+        return;
+      }
+
+      parameters.forEach(parameter => {
+        const row = tbody.insertRow();
+        row.style.borderBottom = '1px solid #f1f5f9';
+
+        const pCell = row.insertCell();
+        pCell.style.padding = '10px 8px';
+        pCell.innerHTML = `<strong>${escapeHtml(parameter.parameter || '')}</strong>` +
+          (parameter.interpretation ? `<div style="font-size:0.75rem; color:#475569; margin-top:3px;">${escapeHtml(parameter.interpretation)}</div>` : '');
+
+        const vCell = row.insertCell();
+        vCell.style.padding = '10px 8px';
+        vCell.style.fontWeight = '600';
+        vCell.textContent = parameter.value == null ? '' : String(parameter.value);
+
+        const uCell = row.insertCell();
+        uCell.style.padding = '10px 8px';
+        uCell.textContent = parameter.unit || '';
+
+        const rCell = row.insertCell();
+        rCell.style.padding = '10px 8px';
+        rCell.textContent = parameter.referenceRange || '';
+
+        const sCell = row.insertCell();
+        sCell.style.padding = '10px 8px';
+        const st = (parameter.status || 'NORMAL').toUpperCase();
+        let badgeStyle = 'background:#dcfce7; color:#166534; padding:3px 8px; border-radius:6px; font-weight:700; font-size:0.75rem; display:inline-block;';
+        if (st === 'HIGH' || st === 'LOW' || st === 'ABNORMAL') {
+          badgeStyle = 'background:#fee2e2; color:#991b1b; padding:3px 8px; border-radius:6px; font-weight:700; font-size:0.75rem; display:inline-block;';
+        }
+        sCell.innerHTML = `<span style="${badgeStyle}">${escapeHtml(st)}</span>`;
+      });
+    }
+
+    async function loadLabReportHistory() {
+      const loading = document.getElementById('lab-report-history-loading');
+      const error = document.getElementById('lab-report-history-error');
+      const empty = document.getElementById('lab-report-history-empty');
+      const historyContainer = document.getElementById('lab-report-history');
+      loading.style.display = 'block';
+      error.style.display = 'none';
+      empty.style.display = 'none';
+      error.textContent = '';
+      historyContainer.replaceChildren();
+
+      try {
+        const reports = await requestApi('/api/reports/history');
+        if (!Array.isArray(reports) || reports.length === 0) {
+          empty.style.display = 'block';
+          return;
+        }
+
+        reports.forEach(entry => {
+          const report = entry.report;
+          if (!report) return;
+          const card = document.createElement('article');
+          card.className = 'card';
+          card.style.padding = '14px';
+
+          const header = document.createElement('div');
+          header.style.display = 'flex';
+          header.style.justifyContent = 'space-between';
+          header.style.alignItems = 'center';
+          header.style.gap = '12px';
+          const name = document.createElement('strong');
+          name.textContent = report.reportName || 'Laboratory report';
+          const date = document.createElement('span');
+          date.style.color = '#64748b';
+          date.style.fontSize = '0.75rem';
+          date.textContent = formatProgressDate(report.uploadedAt || report.reportDate);
+          header.append(name, date);
+          card.appendChild(header);
+
+          const status = document.createElement('p');
+          status.style.color = '#64748b';
+          status.style.fontSize = '0.75rem';
+          status.style.margin = '5px 0 10px';
+          status.textContent = `Status: ${report.status || 'Uploaded'}`;
+          card.appendChild(status);
+
+          const params = Array.isArray(entry.parameters) ? entry.parameters : [];
+          const tableWrap = document.createElement('div');
+          tableWrap.style.overflowX = 'auto';
+          const table = document.createElement('table');
+          table.style.width = '100%';
+          table.style.borderCollapse = 'collapse';
+          table.style.textAlign = 'left';
+          table.style.fontSize = '0.8rem';
+          const head = table.createTHead().insertRow();
+          ['Parameter', 'Value', 'Unit', 'Reference range', 'Status'].forEach(label => {
+            const cell = document.createElement('th');
+            cell.textContent = label;
+            cell.style.padding = '8px';
+            cell.style.color = '#64748b';
+            head.appendChild(cell);
+          });
+          renderLabResultRows(table.createTBody(), params);
+          tableWrap.appendChild(table);
+          card.appendChild(tableWrap);
+
+          const actions = document.createElement('div');
+          actions.style.marginTop = '10px';
+          if (report.fileAvailable) {
+            const openButton = document.createElement('button');
+            openButton.type = 'button';
+            openButton.className = 'btn btn-outline-green';
+            openButton.textContent = 'Open report';
+            openButton.addEventListener('click', () => openProgressReport(report.reportId));
+            actions.appendChild(openButton);
+          }
+          card.appendChild(actions);
+          historyContainer.appendChild(card);
+        });
+        if (!historyContainer.childElementCount) empty.style.display = 'block';
+      } catch (requestError) {
+        error.textContent = `Could not load report history: ${requestError.message}`;
+        error.style.display = 'block';
+      } finally {
+        loading.style.display = 'none';
+      }
+    }
+
+    const generalRecommendationPool = [
+      'Choose regular meals with a variety of vegetables, whole grains, and protein sources that suit you.',
+      'Add enjoyable movement in manageable blocks and build up gradually as your comfort allows.',
+      'Keep a steady sleep and wake schedule where possible.',
+      'Drink according to thirst and any fluid guidance from your healthcare professional.',
+      'Keep your report and note questions to discuss with a healthcare professional, especially for out-of-range values.',
+      'Take short movement breaks during long periods of sitting.',
+      'Plan a few balanced meals or snacks ahead to make everyday choices easier.',
+      'Notice changes in how you feel and share persistent concerns with a healthcare professional.'
+    ];
+
+    function parseRecommendationLines(answer) {
+      return String(answer || '').split(/\r?\n/).flatMap(line => {
+        const clean = line.trim().replace(/^\*\*/, '').replace(/\*\*$/, '').trim();
+        const match = clean.match(/^(?:\d+[.)]|[-*•])\s+(.+)$/);
+        const item = match ? match[1].replace(/\*\*/g, '').trim() : '';
+        return item.length > 12 && !/^disclaimer\b/i.test(item) ? [item] : [];
+      });
+    }
+
+    function chooseThreeRecommendations(candidates, visitNumber) {
+      const unique = [];
+      const seen = new Set();
+      [...candidates, ...generalRecommendationPool].forEach(item => {
+        const clean = String(item || '').trim();
+        const key = clean.toLowerCase();
+        if (clean && !seen.has(key)) {
+          seen.add(key);
+          unique.push(clean);
+        }
+      });
+
+      const size = unique.length;
+      let selected = [];
+      for (let attempt = 0; attempt < size; attempt++) {
+        const start = ((visitNumber - 1) * 3 + attempt) % size;
+        const candidate = [0, 1, 2].map(offset => unique[(start + offset) % size]);
+        const sameAsPrevious = candidate.every(item => previousRecommendationSet.includes(item))
+          && candidate.length === previousRecommendationSet.length;
+        if (!sameAsPrevious) {
+          selected = candidate;
+          break;
+        }
+      }
+      if (!selected.length) selected = [0, 1, 2].map(offset => unique[(visitNumber + offset) % size]);
+      previousRecommendationSet = selected;
+      return selected;
+    }
+
+    function renderRecommendations(items) {
+      const container = document.getElementById('recommendations-list');
+      if (!container) return;
+      container.replaceChildren();
+      items.forEach((item, index) => {
+        const card = document.createElement('article');
+        card.style.cssText = 'display:flex; gap:12px; align-items:flex-start; padding:14px; border:1px solid #e2e8f0; border-radius:10px; background:#fff;';
+        const number = document.createElement('span');
+        number.textContent = String(index + 1);
+        number.style.cssText = 'display:grid; place-items:center; flex:0 0 28px; height:28px; border-radius:50%; background:#ecfdf5; color:#047857; font-weight:800;';
+        const text = document.createElement('div');
+        text.textContent = item;
+        text.style.cssText = 'color:#334155; line-height:1.5;';
+        card.append(number, text);
+        container.appendChild(card);
+      });
+    }
+
+    async function loadFreshRecommendations() {
+      const loading = document.getElementById('recommendations-loading');
+      const error = document.getElementById('recommendations-error');
+      const container = document.getElementById('recommendations-list');
+      const visitNumber = ++recommendationVisitCount;
+      if (loading) loading.style.display = 'block';
+      if (error) { error.style.display = 'none'; error.textContent = ''; }
+      if (container) container.replaceChildren();
+
+      let candidates = [];
+      let notice = '';
+      try {
+        const avoid = previousRecommendationSet.length ? ` Avoid repeating these items: ${previousRecommendationSet.join(' | ')}.` : '';
+        const variation = Math.random().toString(36).slice(2, 9);
+        const response = await requestApi('/api/assistant/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: `Create six numbered, concise, practical wellness recommendations for this user. Use saved lab results and their printed reference ranges when available. If a result is outside range, include discussing it with a healthcare professional. If there are no lab results, provide general low-risk wellness ideas. Make this visit's suggestions fresh and varied (variation ${visitNumber}-${variation}).${avoid} Output only the six numbered recommendations, one per line.` })
+        });
+        const answer = response.answer || '';
+        candidates = parseRecommendationLines(answer);
+        if (/couldn't reach qwen|microservice is offline|qwen.*unavailable/i.test(answer)) {
+          notice = 'Qwen is unavailable; showing general wellness suggestions for now.';
+        } else if (candidates.length < 3) {
+          notice = 'Could not generate enough AI suggestions; showing general wellness suggestions for now.';
+        }
+      } catch (requestError) {
+        notice = `Could not reach the recommendation service (${requestError.message}); showing general suggestions.`;
+      } finally {
+        renderRecommendations(chooseThreeRecommendations(candidates, visitNumber));
+        if (notice && error) { error.textContent = notice; error.style.display = 'block'; }
+        if (loading) loading.style.display = 'none';
+      }
+    }
+
+    async function sendAiMessage(msg, target = 'main') {
+      const prefix = target === 'assistant' ? 'ai-assistant' : 'ai-main';
+      const input = document.getElementById(prefix + '-input');
+      const question = (msg || (input ? input.value : '')).trim();
+      if (!question) return;
+
+      const output = document.getElementById(prefix === 'ai-main' ? 'ai-chat-output' : 'ai-assistant-output');
+      const answerEl = document.getElementById(prefix === 'ai-main' ? 'ai-chat-answer' : 'ai-assistant-answer');
+      const discEl = document.getElementById(prefix === 'ai-main' ? 'ai-chat-disclaimer' : 'ai-assistant-disclaimer');
+
+      if (output) {
+        output.style.display = 'block';
+        answerEl.textContent = 'Analyzing your health profile & generating personalized guidance…';
+        discEl.textContent = '';
+      }
+
+      try {
+        const res = await requestApi('/api/assistant/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question })
+        });
+        if (output) {
+          answerEl.textContent = res.answer || 'No response generated.';
+          discEl.textContent = res.disclaimer || '';
+        } else {
+          alert('AI Assistant: ' + (res.answer || ''));
+        }
+        if (input && !msg) input.value = '';
+      } catch (err) {
+        if (output) {
+          answerEl.textContent = 'Unable to reach AI assistant: ' + err.message;
+        } else {
+          alert('Error: ' + err.message);
+        }
+      }
+    }
+
+    function openProfileModal() {
+      alert('User Profile: Gagan Deep Sir (MW-10234)\nBackend & Database Integration active.');
+    }
+
+    window.addEventListener('resize', function() {
+      if (window.innerWidth > 768) {
+        toggleMobileNav(false);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,567 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Wellness</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      body {
+        background: #f4f7f6;
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState, useEffect } = React;
+
+      const Card = ({ children, className = "" }) => (
+        <div className={`bg-white rounded-2xl border border-slate-200 shadow-sm p-5 ${className}`}>
+          {children}
+        </div>
+      );
+
+      const Button = ({ children, variant = 'primary', className = '', ...props }) => {
+        const variants = {
+          primary: 'bg-emerald-600 text-white hover:bg-emerald-700',
+          outline: 'border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50',
+          ghost: 'text-slate-600 hover:bg-slate-100',
+          danger: 'text-red-600 hover:bg-red-50'
+        };
+
+        return (
+          <button
+            className={`px-4 py-2 rounded-full font-bold text-sm transition-all flex items-center justify-center gap-2 ${variants[variant]} ${className}`}
+            {...props}
+          >
+            {children}
+          </button>
+        );
+      };
+
+      const Badge = ({ children, status }) => {
+        const styles = {
+          Good: 'bg-emerald-100 text-emerald-700',
+          Moderate: 'bg-amber-100 text-amber-700',
+          Attention: 'bg-red-100 text-red-700',
+          Analyzed: 'bg-blue-100 text-blue-700',
+          Processing: 'bg-slate-100 text-slate-600 animate-pulse',
+          High: 'bg-red-100 text-red-700',
+          Medium: 'bg-amber-100 text-amber-700',
+          Low: 'bg-emerald-100 text-emerald-700'
+        };
+
+        return (
+          <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${styles[status] || 'bg-slate-100 text-slate-600'}`}>
+            {children}
+          </span>
+        );
+      };
+
+      function BodyWellness() {
+        const [showForm, setShowForm] = useState(false);
+        const [assessments, setAssessments] = useState([]);
+        const [loading, setLoading] = useState(true);
+        const [formData, setFormData] = useState({
+          symptoms: ['Fatigue'],
+          energyLevel: 7,
+          digestion: 'Good',
+          hydration: 'Adequate',
+          sleepQuality: 'Fair',
+          stressLevel: 'Moderate'
+        });
+
+        const toggleSymptom = (symptom) => {
+          setFormData((prev) => {
+            const exists = prev.symptoms.includes(symptom);
+            return {
+              ...prev,
+              symptoms: exists
+                ? prev.symptoms.filter((item) => item !== symptom)
+                : [...prev.symptoms, symptom]
+            };
+          });
+        };
+
+        const handleSaveAssessment = () => {
+          const newAssessment = {
+            id: Date.now(),
+            date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+            symptoms: formData.symptoms.length ? formData.symptoms : ['None'],
+            severity: formData.stressLevel === 'High' || formData.energyLevel <= 4 ? 'Moderate' : 'Low',
+            energy: formData.energyLevel,
+            digestion: formData.digestion,
+            hydration: formData.hydration,
+            sleep: formData.sleepQuality,
+            stress: formData.stressLevel
+          };
+
+          setAssessments((prev) => [newAssessment, ...prev]);
+          setFormData({
+            symptoms: ['Fatigue'],
+            energyLevel: 7,
+            digestion: 'Good',
+            hydration: 'Adequate',
+            sleepQuality: 'Fair',
+            stressLevel: 'Moderate'
+          });
+          setShowForm(false);
+        };
+
+        useEffect(() => {
+          setTimeout(() => {
+            setAssessments([
+              {
+                id: 1,
+                date: '06 Oct 2026',
+                symptoms: ['Fatigue', 'Poor Sleep'],
+                severity: 'Moderate',
+                energy: 4,
+                digestion: 'Fair',
+                hydration: 'Low',
+                sleep: 'Poor',
+                stress: 'High'
+              },
+              {
+                id: 2,
+                date: '01 Oct 2026',
+                symptoms: ['None'],
+                severity: 'Low',
+                energy: 8,
+                digestion: 'Good',
+                hydration: 'Adequate',
+                sleep: 'Good',
+                stress: 'Moderate'
+              }
+            ]);
+            setLoading(false);
+          }, 800);
+        }, []);
+
+        return (
+          <div className="flex flex-col gap-6 max-w-6xl mx-auto p-6">
+            <header className="flex justify-between items-end">
+              <div>
+                <h1 className="text-2xl font-extrabold text-slate-800">Your Body Wellness</h1>
+                <p className="text-slate-500 font-medium">Understand your body and build healthier daily habits.</p>
+              </div>
+              <Button onClick={() => setShowForm(true)}>🩺 Start Assessment</Button>
+            </header>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <Card className="bg-emerald-50 border-emerald-100">
+                <p className="text-xs font-bold text-emerald-700 uppercase">Energy Level</p>
+                <h3 className="text-2xl font-black text-emerald-900 mt-1">7/10</h3>
+              </Card>
+              <Card className="bg-blue-50 border-blue-100">
+                <p className="text-xs font-bold text-blue-700 uppercase">Hydration</p>
+                <h3 className="text-2xl font-black text-blue-900 mt-1">Adequate</h3>
+              </Card>
+              <Card className="bg-violet-50 border-violet-100">
+                <p className="text-xs font-bold text-violet-700 uppercase">Sleep</p>
+                <h3 className="text-2xl font-black text-violet-900 mt-1">6.5h</h3>
+              </Card>
+              <Card className="bg-amber-50 border-amber-100">
+                <p className="text-xs font-bold text-amber-700 uppercase">Digestion</p>
+                <h3 className="text-2xl font-black text-amber-900 mt-1">Good</h3>
+              </Card>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2 space-y-6">
+                <Card>
+                  <h2 className="font-bold text-slate-800 mb-4 flex items-center gap-2">🕒 Assessment History</h2>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-sm min-w-[780px]">
+                      <thead>
+                        <tr className="border-b border-slate-100 text-slate-400 font-bold">
+                          <th className="pb-3">Date</th>
+                          <th className="pb-3">Symptoms</th>
+                          <th className="pb-3">Energy</th>
+                          <th className="pb-3">Digestion</th>
+                          <th className="pb-3">Hydration</th>
+                          <th className="pb-3">Sleep</th>
+                          <th className="pb-3">Stress</th>
+                          <th className="pb-3 text-right">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-50">
+                        {loading ? (
+                          <tr>
+                            <td colSpan="8" className="py-4 text-slate-500 text-center">Loading assessments...</td>
+                          </tr>
+                        ) : assessments.map((a) => (
+                          <tr key={a.id}>
+                            <td className="py-4 font-bold">{a.date}</td>
+                            <td className="py-4">{a.symptoms.join(', ')}</td>
+                            <td className="py-4">{a.energy}/10</td>
+                            <td className="py-4">{a.digestion}</td>
+                            <td className="py-4">{a.hydration}</td>
+                            <td className="py-4">{a.sleep}</td>
+                            <td className="py-4">{a.stress}</td>
+                            <td className="py-4 text-right">
+                              <button className="text-emerald-600 font-bold hover:underline">Details</button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </Card>
+              </div>
+
+              <div className="space-y-6">
+                <Card className="bg-gradient-to-br from-emerald-50 to-white border-emerald-200">
+                  <h2 className="font-bold text-emerald-900 mb-3">🌿 Wellness Insights</h2>
+                  <p className="text-sm text-emerald-800 leading-relaxed italic">
+                    "You have reported fatigue in multiple recent assessments. Track when it occurs and consider professional advice if it persists."
+                  </p>
+                  <div className="mt-4 p-3 bg-white/50 rounded-xl text-[10px] text-emerald-600 font-semibold uppercase">
+                    Disclaimer: Not a medical diagnosis.
+                  </div>
+                </Card>
+
+                <Card>
+                  <h2 className="font-bold text-slate-800 mb-4">💧 Lifestyle Snapshot</h2>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex justify-between items-center text-sm mb-2">
+                        <span className="text-slate-500">Hydration</span>
+                        <span className="font-bold">2.4L / 3L</span>
+                      </div>
+                      <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                        <div className="bg-blue-400 h-full w-[80%]"></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between items-center text-sm mb-2">
+                        <span className="text-slate-500">Sleep</span>
+                        <span className="font-bold">6.5h / 8h</span>
+                      </div>
+                      <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                        <div className="bg-violet-500 h-full w-[81%]"></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between items-center text-sm mb-2">
+                        <span className="text-slate-500">Stress</span>
+                        <span className="font-bold">Moderate</span>
+                      </div>
+                      <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                        <div className="bg-amber-400 h-full w-[58%]"></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between items-center text-sm mb-2">
+                        <span className="text-slate-500">Digestion</span>
+                        <span className="font-bold">Fair</span>
+                      </div>
+                      <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                        <div className="bg-emerald-500 h-full w-[70%]"></div>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </div>
+            </div>
+
+            {showForm && (
+              <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                <Card className="max-w-lg w-full animate-in fade-in zoom-in duration-200">
+                  <h2 className="text-xl font-black mb-4">New Assessment</h2>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-xs font-bold text-slate-500 uppercase">How are you feeling?</label>
+                      <div className="grid grid-cols-2 gap-2 mt-2">
+                        {['Gas', 'Acidity', 'Bloating', 'Constipation', 'Fatigue', 'Joint Pain'].map((s) => (
+                          <button
+                            key={s}
+                            type="button"
+                            onClick={() => toggleSymptom(s)}
+                            className={`px-3 py-2 border rounded-xl text-sm font-semibold transition-all ${
+                              formData.symptoms.includes(s)
+                                ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+                                : 'border-slate-200 hover:border-emerald-500'
+                            }`}
+                          >
+                            {s}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-bold text-slate-500 uppercase">Digestion</label>
+                      <select
+                        className="mt-2 w-full border border-slate-200 rounded-xl px-3 py-2 text-sm font-medium focus:outline-none focus:border-emerald-500"
+                        value={formData.digestion}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, digestion: e.target.value }))}
+                      >
+                        {['Good', 'Fair', 'Poor'].map((option) => (
+                          <option key={option} value={option}>{option}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-bold text-slate-500 uppercase">Hydration</label>
+                      <select
+                        className="mt-2 w-full border border-slate-200 rounded-xl px-3 py-2 text-sm font-medium focus:outline-none focus:border-emerald-500"
+                        value={formData.hydration}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, hydration: e.target.value }))}
+                      >
+                        {['Adequate', 'Low', 'Moderate', 'High'].map((option) => (
+                          <option key={option} value={option}>{option}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-bold text-slate-500 uppercase">Sleep Quality</label>
+                      <select
+                        className="mt-2 w-full border border-slate-200 rounded-xl px-3 py-2 text-sm font-medium focus:outline-none focus:border-emerald-500"
+                        value={formData.sleepQuality}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, sleepQuality: e.target.value }))}
+                      >
+                        {['Good', 'Fair', 'Poor'].map((option) => (
+                          <option key={option} value={option}>{option}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-bold text-slate-500 uppercase">Stress Level</label>
+                      <select
+                        className="mt-2 w-full border border-slate-200 rounded-xl px-3 py-2 text-sm font-medium focus:outline-none focus:border-emerald-500"
+                        value={formData.stressLevel}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, stressLevel: e.target.value }))}
+                      >
+                        {['Low', 'Moderate', 'High'].map((option) => (
+                          <option key={option} value={option}>{option}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-bold text-slate-500 uppercase">Energy (1-10)</label>
+                      <div className="mt-2 flex items-center gap-3">
+                        <input
+                          type="range"
+                          className="w-full accent-emerald-600"
+                          min="1"
+                          max="10"
+                          value={formData.energyLevel}
+                          onChange={(e) => setFormData((prev) => ({ ...prev, energyLevel: Number(e.target.value) }))}
+                        />
+                        <span className="font-black text-emerald-700 w-8 text-center">{formData.energyLevel}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-3 pt-4">
+                      <Button className="flex-1" onClick={handleSaveAssessment}>Save Assessment</Button>
+                      <Button variant="ghost" onClick={() => setShowForm(false)}>Cancel</Button>
+                    </div>
+                  </div>
+                </Card>
+              </div>
+            )}
+          </div>
+        );
+      }
+
+      function LabReports() {
+        const [reports, setReports] = useState([
+          { id: 1, name: 'GeneralHealth_Oct.pdf', date: '06 Oct 2026', size: '1.2 MB', status: 'Analyzed' },
+          { id: 2, name: 'BloodPanel_Sept.jpg', date: '15 Sep 2026', size: '2.4 MB', status: 'Analyzed' }
+        ]);
+        const [isUploading, setIsUploading] = useState(false);
+
+        const handleUpload = () => {
+          setIsUploading(true);
+          setTimeout(() => setIsUploading(false), 3000);
+        };
+
+        return (
+          <div className="flex flex-col gap-6 max-w-6xl mx-auto p-6">
+            <header>
+              <h1 className="text-2xl font-extrabold text-slate-800">Lab Reports & OCR</h1>
+              <p className="text-slate-500 font-medium">Upload, manage, and understand your laboratory reports.</p>
+            </header>
+
+            <Card className="border-dashed border-2 border-slate-300 bg-slate-50 flex flex-col items-center py-10">
+              <div className="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center text-3xl mb-4">📤</div>
+              <h2 className="font-bold text-slate-800">Upload Your Lab Report</h2>
+              <p className="text-sm text-slate-500 mt-1 mb-6">Support for PDF, JPG, and PNG (Max 10MB)</p>
+              <input type="file" id="lab-upload" className="hidden" onChange={handleUpload} />
+              <Button onClick={() => document.getElementById('lab-upload').click()} disabled={isUploading}>
+                {isUploading ? 'Processing OCR...' : 'Select File'}
+              </Button>
+              {isUploading && (
+                <div className="mt-6 w-64 space-y-2">
+                  <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase">
+                    <span>Extracting Data</span>
+                    <span>65%</span>
+                  </div>
+                  <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                    <div className="bg-emerald-500 h-full w-[65%] transition-all duration-500"></div>
+                  </div>
+                </div>
+              )}
+            </Card>
+
+            <div className="space-y-4">
+              <h3 className="font-bold text-slate-800 px-1">Report History</h3>
+              <Card className="p-0 overflow-hidden">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-slate-50 border-b border-slate-100">
+                    <tr className="text-slate-400 font-bold">
+                      <th className="px-6 py-4">Report Name</th>
+                      <th className="px-6 py-4">Date</th>
+                      <th className="px-6 py-4">Status</th>
+                      <th className="px-6 py-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-50">
+                    {reports.map((r) => (
+                      <tr key={r.id} className="hover:bg-slate-50/50 transition-colors">
+                        <td className="px-6 py-4 font-bold flex items-center gap-3">
+                          <span className="text-xl">📄</span> {r.name}
+                        </td>
+                        <td className="px-6 py-4 text-slate-500">{r.date}</td>
+                        <td className="px-6 py-4"><Badge status={r.status}>{r.status}</Badge></td>
+                        <td className="px-6 py-4 text-right flex justify-end gap-2">
+                          <Button variant="ghost" className="h-8 w-8 p-0">👁️</Button>
+                          <Button variant="ghost" className="h-8 w-8 p-0 text-red-400">🗑️</Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </Card>
+            </div>
+
+            <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 flex gap-4">
+              <span className="text-xl">⚠️</span>
+              <p className="text-xs text-amber-800 leading-normal">
+                <strong>Medical Safety Notice:</strong> These results are extracted via AI for informational guidance only. Laboratory results require professional clinical interpretation. Please consult your doctor for diagnosis.
+              </p>
+            </div>
+          </div>
+        );
+      }
+
+      function Recommendations() {
+        const [activeFilter, setActiveFilter] = useState('All');
+        const filters = ['All', 'Nutrition', 'Hydration', 'Sleep', 'Lifestyle'];
+
+        const recs = [
+          { id: 1, title: 'Consistent Hydration', category: 'Hydration', text: 'Drink 2.8L water daily based on your activity levels.', icon: '💧', priority: 'High' },
+          { id: 2, title: 'Protein Intake', category: 'Nutrition', text: 'Consider increasing protein in breakfast to stabilize energy.', icon: '🥗', priority: 'Medium' },
+          { id: 3, title: 'Sleep Hygiene', category: 'Sleep', text: 'Maintain a consistent 10 PM bedtime to improve recovery.', icon: '🌙', priority: 'High' }
+        ];
+
+        const filteredRecs = activeFilter === 'All' ? recs : recs.filter((r) => r.category === activeFilter);
+
+        return (
+          <div className="flex flex-col gap-6 max-w-6xl mx-auto p-6">
+            <header>
+              <h1 className="text-2xl font-extrabold text-slate-800">Your Wellness Recommendations</h1>
+              <p className="text-slate-500 font-medium">Small, personalized steps toward better everyday health.</p>
+            </header>
+
+            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+              {filters.map((f) => (
+                <button
+                  key={f}
+                  onClick={() => setActiveFilter(f)}
+                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
+                    activeFilter === f ? 'bg-emerald-600 text-white shadow-md' : 'bg-white text-slate-500 border border-slate-200'
+                  }`}
+                >
+                  {f}
+                </button>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredRecs.map((r) => (
+                <Card key={r.id} className="flex flex-col justify-between hover:border-emerald-300 transition-all group">
+                  <div>
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-xl">
+                        {r.icon}
+                      </div>
+                      <Badge status={r.priority === 'High' ? 'Attention' : 'Good'}>{r.priority}</Badge>
+                    </div>
+                    <h3 className="font-bold text-slate-800 group-hover:text-emerald-700">{r.title}</h3>
+                    <p className="text-xs text-slate-400 font-bold uppercase mt-1">{r.category}</p>
+                    <p className="text-sm text-slate-600 mt-3 leading-relaxed">{r.text}</p>
+                  </div>
+                  <div className="mt-6 flex gap-2">
+                    <Button className="flex-1 text-[10px] py-2">View Details</Button>
+                    <Button variant="ghost" className="text-[10px] border border-slate-200">Done</Button>
+                  </div>
+                </Card>
+              ))}
+            </div>
+
+            <section className="mt-6">
+              <h3 className="font-bold text-slate-800 mb-4 px-1">Your Daily Action Plan</h3>
+              <Card className="bg-gradient-to-r from-slate-900 to-slate-800 text-white border-none">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <div className="space-y-4 flex-1">
+                    {[
+                      { task: 'Drink 2.8L Water', done: true },
+                      { task: '15 Min Stretching', done: false },
+                      { task: 'Sleep by 10 PM', done: false }
+                    ].map((t, idx) => (
+                      <div key={idx} className="flex items-center gap-3">
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center text-[10px] ${t.done ? 'bg-emerald-500 border-emerald-500' : 'border-slate-600'}`}>
+                          {t.done && '✓'}
+                        </div>
+                        <span className={`text-sm font-medium ${t.done ? 'text-slate-400 line-through' : 'text-slate-200'}`}>
+                          {t.task}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-center md:text-right px-6 border-l border-slate-700">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase">Daily Progress</p>
+                    <h4 className="text-4xl font-black text-emerald-400">33%</h4>
+                    <p className="text-xs text-slate-500 mt-1">1 of 3 actions completed</p>
+                  </div>
+                </div>
+              </Card>
+            </section>
+          </div>
+        );
+      }
+
+      function App() {
+        return (
+          <div className="space-y-8 py-8">
+            <BodyWellness />
+            <LabReports />
+            <Recommendations />
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
