@@ -1,3 +1,4 @@
+ HEAD
 # My Wellness: local development setup
 
 This project contains a static web UI, a Spring Boot API, and a FastAPI service that reads lab reports. The OCR service extracts text and laboratory values from uploaded PDF/JPG/PNG/WebP files. It can use a local Qwen model through Ollama to add plain-language report guidance and answer questions about extracted results.
@@ -84,3 +85,6 @@ Spring Boot's OCR endpoint is configured by `ocr.service.url` in `src/main/resou
 - `POST /api/ocr/parse`: multipart upload with field `file`
 - `POST /api/ai/chat`: JSON question and extracted parameters
 - `GET /health`: OCR engine and local Qwen availability
+=======
+# MY_WEELLNESS
+ origin/main
